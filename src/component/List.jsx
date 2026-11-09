@@ -1,3 +1,4 @@
+import React from 'react';
 import Item from './Item';
 
 const List = ({ phones, onDelete, onEdit }) => {

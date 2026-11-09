@@ -1,9 +1,8 @@
-import  { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Insert = ({ onInsert, onUpdate, editingPhone, setEditingPhone }) => {
   const [form, setForm] = useState({ name: '', phone: '' });
 
-  // 수정하려는 아이템이 선택되면 폼에 기존 데이터 채우기
   useEffect(() => {
     if (editingPhone) {
       setForm({ name: editingPhone.name, phone: editingPhone.phone });
@@ -17,18 +16,17 @@ const Insert = ({ onInsert, onUpdate, editingPhone, setEditingPhone }) => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleRegisterSubmit = (e) => {
     e.preventDefault();
     if (!form.name || !form.phone) return;
+    onInsert(form);
+    setForm({ name: '', phone: '' });
+  };
 
-    if (editingPhone) {
-      // 수정 모드일 때 PUT 요청 수행
-      onUpdate(editingPhone.id, form);
-    } else {
-      // 등록 모드일 때 POST 요청 수행
-      onInsert(form);
-    }
-
+  const handleUpdateSubmit = (e) => {
+    e.preventDefault();
+    if (!form.name || !form.phone) return;
+    onUpdate(editingPhone.id, form);
     setForm({ name: '', phone: '' });
   };
 
@@ -38,26 +36,48 @@ const Insert = ({ onInsert, onUpdate, editingPhone, setEditingPhone }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="insert-form">
-      <input
-        type="text"
-        name="name"
-        placeholder="이름"
-        value={form.name}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="phone"
-        placeholder="전화번호"
-        value={form.phone}
-        onChange={handleChange}
-      />
-      <button type="submit">{editingPhone ? '수정하기' : '등록'}</button>
-      {editingPhone && (
-        <button type="button" onClick={handleCancel}>취소</button>
+    <div className="insert-container">
+      {editingPhone ? (
+        <form onSubmit={handleUpdateSubmit} className="insert-form">
+          <h3>연락처 수정</h3>
+          <input
+            type="text"
+            name="name"
+            placeholder="이름"
+            value={form.name}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="phone"
+            placeholder="전화번호"
+            value={form.phone}
+            onChange={handleChange}
+          />
+          <button type="submit">수정 완료</button>
+          <button type="button" onClick={handleCancel}>취소</button>
+        </form>
+      ) : (
+        <form onSubmit={handleRegisterSubmit} className="insert-form">
+          <h3>새 연락처 등록</h3>
+          <input
+            type="text"
+            name="name"
+            placeholder="이름"
+            value={form.name}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="phone"
+            placeholder="전화번호"
+            value={form.phone}
+            onChange={handleChange}
+          />
+          <button type="submit">등록</button>
+        </form>
       )}
-    </form>
+    </div>
   );
 };
 
