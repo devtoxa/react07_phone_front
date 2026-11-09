@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 
 const Insert = ({ onInsert, onUpdate, editingPhone, setEditingPhone }) => {
   const [form, setForm] = useState({ name: '', phone: '' });
